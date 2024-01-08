@@ -5,7 +5,7 @@ namespace Dleschner\Slim;
 use RuntimeException;
 
 /**
- * Eine Klasse erzeugen
+ * Eine finale Klasse erzeugen
  */
 final class Parsers {
 
