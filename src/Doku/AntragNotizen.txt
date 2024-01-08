@@ -1,0 +1,39 @@
+Thema:
+Bedienoberfläche für die Starface REST API
+
+
+Ist Zustand:
+- Starface REST API
+- Starface eigene Bedienoberfläche
+- sehr unübersichtlich
+- zu wenig Funktionen und Optionen für die User
+- keine An-oder Abmeldefunktion für die Gruppen
+- keine Möglichkeit Kontaktdaten zu ändern
+
+Soll Zustand:
+- Eigene Bedienoberfläche für Screwerk User
+- Designe Firmentreu ?
+- Einfache Bedienbarkeit
+- Mehr Funktionen und Optionen 
+- Die Möglichkeit Userdaten Abzurufen(Nur die Eigenen(UserMe))
+- Die Möglichkeit Kontaktdaten Abzurufen(optional)
+- Die Möglichkeit Kontaktdaten verändern zu können(optional)
+- Die Möglichkeit User in die Gruppen hinzfügen
+- User können sich selber An- oder Abmelden(optional)
+
+Verwendete Sprachen:
+- PHP (slim Framework, Guzzle, Twig)
+- HTML
+- CSS
+
+Umfeld:
+- Screwerk
+- der Spezialist für die weltweite Verfügbarkeit von Schrauben für Kunststoffe.
+- Graph-IT 
+- Softwareentwicklung und Betreung
+- der Graphen
+- Starface REST API
+- Visuell Code
+- Linux Ubunto
+- PHP psalm
+- GitHub

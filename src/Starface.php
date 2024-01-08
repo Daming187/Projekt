@@ -6,6 +6,9 @@ use Dleschner\Slim\Starface\Group;
 use Dleschner\Slim\Starface\Login;
 use Dleschner\Slim\Starface\ContactsTag;
 
+/**
+ * Finaleklasse erzeugen
+ */
 final class Starface {
     private function __construct() { }
 
