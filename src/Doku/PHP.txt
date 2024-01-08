@@ -1,0 +1,14 @@
+Parsers.php => Zeile 10
+final class :
+Die finale Klasse kann nicht mit Unterklassen erweitert werden.
+Die Objekte dieser Klasse können auch nur in der Klasse selbst erzeugt werden.
+
+
+Group.php => Zeile 19
+readonly :
+Der Wert ist schreibgeschüzt und kann nach der Instanziierung nicht geändert werden.
+
+Group.php => Zeile 72
+
+(AssignableNumber::parse(...), $value['assignableNumbers'])
+First-class callable syntax

@@ -1,0 +1,11 @@
+Die Quellen Angaben
+
+Twig template PHP
+https://twig.symfony.com/
+
+Slim Framework
+https://www.slimframework.com/
+
+Guzzle
+https://docs.guzzlephp.org/en/stable/
+

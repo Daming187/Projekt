@@ -1,0 +1,25 @@
+{
+    "name": "dleschner/slim",
+    "type": "project",
+    "require": {
+        "slim/slim": "^4.12",
+        "middlewares/php-session": "^3.1",
+        "slim/psr7": "^1.6",
+        "guzzlehttp/guzzle": "^7.8",
+        "twig/twig": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dleschner\\Slim\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Damian Leschner",
+            "email": "damian.leschner@graph-it.com"
+        }
+    ],
+    "require-dev": {
+        "vimeo/psalm": "^5.18.0"
+    }
+}

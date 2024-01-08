@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Gruppe</title>
+</head>
+<body>
+    <h1>Gruppe</h1><br>
+    <ul>
+        <li>
+            <strong>id: </strong>{{ group.id }}
+        </li>
+        <li>
+            <strong>name: </strong>{{ group.name }}
+        </li>
+        <li>
+            <strong>GroupId: </strong>{{ group.groupId }}
+        </li>
+        <li>
+            <strong>AssignableUsers:</strong>
+        {% for user in  group.assignableUsers %}
+                <ul>
+                    <li>
+                        <strong>assigned:</strong> {{ user.assigned ? 'ja' : 'nein' }}
+                    </li>
+                    <li>
+                        <strong>firstname:</strong> {{ user.firstname }}
+                    </li>
+                    <li>
+                        <strong>id:</strong> {{ user.id }}
+                    </li>
+                    <li>
+                        <strong>lastname:</strong> {{ user.lastname}}
+                    </li>
+                </ul>
+        {% endfor %}
+        </li>
+    </ul>
+    <a href=" users/me">Benutzer</a><br>
+    <a href=" /groups">Gruppen</a><br>
+    <a href=" /logout">Ausloggen</a><br>
+</body>
+</html>
