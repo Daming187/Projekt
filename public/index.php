@@ -11,17 +11,14 @@ use Slim\Routing\RouteContext;
 
 use Middlewares\PhpSession;
 
+use Dleschner\Slim\Session;
 use Dleschner\Slim\Starface;
-use Dleschner\Slim\Starface\Login;
 use Slim\Psr7\Response as Psr7Response;
 
 require(__DIR__.'/../vendor/autoload.php');
 
 ini_set('session.use_cookies', false);
 ini_set('session.cache_limiter', '');
-
-
-
 
 $ini = parse_ini_file(__DIR__.'/.cred.ini');
 
@@ -36,19 +33,34 @@ function urlFor(App $app, string $routeName, array $data = [], array $queryParam
     return $routeParser->urlFor($routeName, $data , $queryParams);
 } 
 
+/**
+ * @template T
+ * 
+ * @param class-string<T> $classname
+ * @param mixed           $value
+ * 
+ * @return ?T
+ */
+function castObjecct(string $classname, $value) {
+    if ($value instanceof $classname) {
+        return $value;
+    }
+    return null;
+}
+
 $app = AppFactory::create();
 
 $app->add(function (Request $request, RequestHandler $handler) use ($app) {
-    /** @psalm-suppress MixedAssignment */
-    if ($route = $request->getAttribute(RouteContext::ROUTE)) {
-        if ($route instanceof Route) {
+    /* * @psalm-suppress MixedAssignment */
+    if ($route = castObjecct(Route::class, $request->getAttribute(RouteContext::ROUTE))) {
+        //if ($route instanceof Route) {
             if (in_array($route->getName(), ['login', 'login-post', 'logout'])) {
                 return $handler->handle($request);
             }
-        }
+        //}
     }
 
-    if ( !isset($_SESSION['authToken'])) {
+    if ( !Session::hasAuthToken()) {
         return (new Psr7Response())
             ->withHeader('Location', urlFor($app, 'login'))
             ->withStatus(303)
@@ -87,7 +99,7 @@ $app->post('/login', function (Request $request, Response $response) use ($app) 
             ->withStatus(303);
     }
 
-    $_SESSION['authToken'] = $authToken;
+    Session::setAuthToken($authToken);
 
     return $response
             ->withHeader('Location', urlFor($app, 'usersMe'))
@@ -95,7 +107,7 @@ $app->post('/login', function (Request $request, Response $response) use ($app) 
 })->setName('login-post');
 
 $app->any('/logout', function (Request $request, Response $response) use ($app) {
-    unset($_SESSION['authToken']);
+    Session::delAuthToken();
 
     return $response
             ->withHeader('Location', urlFor($app, 'login'))
@@ -104,10 +116,8 @@ $app->any('/logout', function (Request $request, Response $response) use ($app) 
 
 
 $app->any('/users/me', function (Request $request, Response $response) use ($twig) {
-    /** @psalm-suppress MixedAssignment */
-    $authToken = $_SESSION['authToken'];
+    $authToken = Session::getAuthToken();
 
-    /** @psalm-suppress MixedArgument */
     $usersMe = Starface::getUsersMe($authToken);
     /** @psalm-suppress PossiblyNullArgument */
     $response->getBody()->write($twig->render('usersMe.html', $usersMe));
@@ -116,10 +126,8 @@ $app->any('/users/me', function (Request $request, Response $response) use ($twi
 })->setName('usersMe');
 
 $app->any('/groups', function (Request $_request, Response $response) use ($twig) {
-    /** @psalm-suppress MixedAssignment */
-    $authToken = $_SESSION['authToken'];
+    $authToken = Session::getAuthToken();
 
-    /** @psalm-suppress MixedArgument */
     $groups = Starface::getGroups($authToken);
     $response->getBody()->write($twig->render('groups.html', [
         'groups' => $groups
@@ -130,12 +138,9 @@ $app->any('/groups', function (Request $_request, Response $response) use ($twig
 
 /** @psalm-suppress MissingClosureParamType */
 $app->any('/groups/{id}', function (Request $request, Response $response, $args) use ($twig) {
-    /** @psalm-suppress MixedAssignment */
-    $authToken = $_SESSION['authToken'];
+    $authToken = Session::getAuthToken();
 
-    /** @psalm-suppress MixedArrayAccess 
-     * @psalm-suppress MixedArgument 
-     */
+    /** @psalm-suppress MixedArrayAccess */
     $group = Starface::getGroup($authToken, (int)$args['id']);
     $response->getBody()->write($twig->render('group.html', [
         'group' => $group
@@ -145,9 +150,8 @@ $app->any('/groups/{id}', function (Request $request, Response $response, $args)
 })->setName('group');
 
 $app->any('/contacts/tags', function (Request $request, Response $response) use ($twig) {
-    /** @psalm-suppress MixedAssignment */
-    $authToken = $_SESSION['authToken'];
-    /** @psalm-suppress MixedArgument */
+    $authToken = Session::getAuthToken();
+
     $contactsTag = Starface::getContactsTag($authToken);
     $response->getBody()->write($twig->render('contactsTag.html', [
         'contactsTag' => $contactsTag

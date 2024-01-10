@@ -12,3 +12,43 @@ Group.php => Zeile 72
 
 (AssignableNumber::parse(...), $value['assignableNumbers'])
 First-class callable syntax
+
+
+
+class A {
+    public static function static_addOne(int $elem): int {
+        return $elem + 1;
+    }
+    public function inst_addOne(int elem): int {
+        return $elem + 1;
+    }
+}
+
+$a = new A();
+$b = 3;
+
+function simple_addOne(int $elem): int {
+    return $elem + 1;
+}
+
+$callable1 = 'simple_addOne'
+$callable1a = simple_addOne(...)
+
+$callable2 = ['A', 'static_addOne']
+$callable2a = A::static_addOne(...)
+
+$callable3 = [$a, 'inst_addOne']
+$callable3a = $a->inst_addOne(...)
+
+array_map($callable3a, $array)
+
+
+function other_function(bool $first, int $a, string $b): void {
+}
+$a = [3, "Welt"]
+other_function(true, ...$a)
+
+
+function yet_an_other_func(bool $first, int ...$a) {
+}
+yet_an_other_func(true, 1, 2, 5, 7)

@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'dleschner/slim',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => NULL,
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => 'c9363df97c2d2d83f1e71ceb3d1fe76941d65ff3',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -56,9 +56,9 @@
             'dev_requirement' => true,
         ),
         'dleschner/slim' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => NULL,
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => 'c9363df97c2d2d83f1e71ceb3d1fe76941d65ff3',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -209,9 +209,9 @@
             'dev_requirement' => true,
         ),
         'phpstan/phpdoc-parser' => array(
-            'pretty_version' => '1.24.5',
-            'version' => '1.24.5.0',
-            'reference' => 'fedf211ff14ec8381c9bf5714e33a7a552dd1acc',
+            'pretty_version' => '1.25.0',
+            'version' => '1.25.0.0',
+            'reference' => 'bd84b629c8de41aa2ae82c067c955e06f1b00240',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpdoc-parser',
             'aliases' => array(),
@@ -220,7 +220,7 @@
         'psalm/psalm' => array(
             'dev_requirement' => true,
             'provided' => array(
-                0 => '5.18.0',
+                0 => '5.19.0',
             ),
         ),
         'psr/container' => array(
@@ -455,9 +455,9 @@
             'dev_requirement' => false,
         ),
         'vimeo/psalm' => array(
-            'pretty_version' => '5.18.0',
-            'version' => '5.18.0.0',
-            'reference' => 'b113f3ed0259fd6e212d87c3df80eec95a6abf19',
+            'pretty_version' => '5.19.0',
+            'version' => '5.19.0.0',
+            'reference' => '06b71be009a6bd6d81b9811855d6629b9fe90e1b',
             'type' => 'project',
             'install_path' => __DIR__ . '/../vimeo/psalm',
             'aliases' => array(),
