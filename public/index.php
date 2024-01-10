@@ -90,7 +90,7 @@ $app->post('/login', function (Request $request, Response $response) use ($app) 
     /** @psalm-suppress MixedAssignment */
     $password = $params['password'];
 
-    $loginIdAdmin = 241;
+    $loginIdAdmin = '241';
     /** @psalm-suppress MixedAssignment */
     $passwordAdmin = 'MGj65qtAuT';
 
@@ -104,6 +104,12 @@ $app->post('/login', function (Request $request, Response $response) use ($app) 
     }
 
     $adminToken = Starface::getAuthToken($loginIdAdmin, $passwordAdmin);
+    if ( !isset($adminToken)) {
+        return $response
+            ->withHeader('Location', urlFor($app, 'login'))
+            ->withStatus(500);
+    }
+
 
     Session::setUserToken($authToken);
     Session::setAdminToken($adminToken);
@@ -115,6 +121,7 @@ $app->post('/login', function (Request $request, Response $response) use ($app) 
 
 $app->any('/logout', function (Request $request, Response $response) use ($app) {
     Session::delUserToken();
+    Session::delAdminToken();
 
     return $response
             ->withHeader('Location', urlFor($app, 'login'))
