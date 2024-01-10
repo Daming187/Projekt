@@ -39,4 +39,26 @@ final class Session {
         unset($_SESSION[self::USER_TOKEN_KEY]);
     }
 
+    public static function hasAdminToken(): bool {
+        return isset($_SESSION[self::ADMIN_TOKEN_KEY]);
+    }
+
+    public static function getAdminToken(): string {
+        if ( !self::hasAdminToken()) {
+            throw new \RuntimeException();
+        }
+        if ( !is_string($_SESSION[self::ADMIN_TOKEN_KEY])) {
+            throw new LogicException();
+        }
+        return $_SESSION[self::ADMIN_TOKEN_KEY];
+    }
+
+    public static function setAdminToken(string $token): void {
+        $_SESSION[self::ADMIN_TOKEN_KEY] = $token;
+    }
+
+    public static function delAdminToken(): void {
+        unset($_SESSION[self::ADMIN_TOKEN_KEY]);
+    }
+
 }
