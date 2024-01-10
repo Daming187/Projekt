@@ -90,7 +90,11 @@ $app->post('/login', function (Request $request, Response $response) use ($app) 
     /** @psalm-suppress MixedAssignment */
     $password = $params['password'];
 
-    
+    $loginIdAdmin = 241;
+    /** @psalm-suppress MixedAssignment */
+    $passwordAdmin = 'MGj65qtAuT';
+
+
     /** @psalm-suppress MixedArgument */
     $authToken = Starface::getAuthToken($loginId, $password);
     if ( !isset($authToken)) {
@@ -99,7 +103,10 @@ $app->post('/login', function (Request $request, Response $response) use ($app) 
             ->withStatus(303);
     }
 
+    $adminToken = Starface::getAuthToken($loginIdAdmin, $passwordAdmin);
+
     Session::setUserToken($authToken);
+    Session::setAdminToken($adminToken);
 
     return $response
             ->withHeader('Location', urlFor($app, 'usersMe'))
@@ -126,9 +133,9 @@ $app->any('/users/me', function (Request $request, Response $response) use ($twi
 })->setName('usersMe');
 
 $app->any('/groups', function (Request $_request, Response $response) use ($twig) {
-    $authToken = Session::getUserToken();
+    $adminToken = Session::getAdminToken();
 
-    $groups = Starface::getGroups($authToken);
+    $groups = Starface::getGroups($adminToken);
     $response->getBody()->write($twig->render('groups.html', [
         'groups' => $groups
     ]));
@@ -138,10 +145,10 @@ $app->any('/groups', function (Request $_request, Response $response) use ($twig
 
 /** @psalm-suppress MissingClosureParamType */
 $app->any('/groups/{id}', function (Request $request, Response $response, $args) use ($twig) {
-    $authToken = Session::getUserToken();
+    $adminToken = Session::getAdminToken();
 
     /** @psalm-suppress MixedArrayAccess */
-    $group = Starface::getGroup($authToken, (int)$args['id']);
+    $group = Starface::getGroup($adminToken, (int)$args['id']);
     $response->getBody()->write($twig->render('group.html', [
         'group' => $group
     ]));
@@ -149,15 +156,5 @@ $app->any('/groups/{id}', function (Request $request, Response $response, $args)
     return $response;
 })->setName('group');
 
-$app->any('/contacts/tags', function (Request $request, Response $response) use ($twig) {
-    $authToken = Session::getUserToken();
-
-    $contactsTag = Starface::getContactsTag($authToken);
-    $response->getBody()->write($twig->render('contactsTag.html', [
-        'contactsTag' => $contactsTag
-    ]));
-
-    return $response;
-})->setName('contactsTag');
 
 $app->run();

@@ -17,7 +17,6 @@ final class Starface {
     private const USERSME_URL = self::SERVER . '/rest/users/me';
     private const GROUPS_URL = self::SERVER . '/rest/groups';
     private const GROUP_URL = self::SERVER . '/rest/groups';
-    private const CONTACTSTAG_URL = self::SERVER . '/rest/contacts/tags';
 
     private static function getNonce(): ?Login {
         $client = new \GuzzleHttp\Client();
@@ -95,19 +94,6 @@ final class Starface {
             ]
         ]);
         return Group::parse(json_decode($response->getBody()->getContents(), true));
-    }
-
-    public static function getContactsTag(string $authToken): ContactsTag {
-        $client = new \GuzzleHttp\Client();
-        $response = $client->request('GET', self::CONTACTSTAG_URL, [
-            'headers' => [
-                'X-Version' => '2',
-                'Content-Type' => 'application/json',
-                'authToken' => $authToken,
-            ]
-        ]);
-        print_r($response);
-        return ContactsTag::parse(json_decode($response->getBody()->getContents(), true));
     }
 }
 
