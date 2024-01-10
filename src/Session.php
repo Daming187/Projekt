@@ -17,12 +17,12 @@ final class Session {
      */
     private function __construct() {}
 
-    public static function hasAuthToken(): bool {
+    public static function hasUserToken(): bool {
         return isset($_SESSION[self::USER_TOKEN_KEY]);
     }
 
-    public static function getAuthToken(): string {
-        if ( !self::hasAuthToken()) {
+    public static function getUserToken(): string {
+        if ( !self::hasUserToken()) {
             throw new \RuntimeException();
         }
         if ( !is_string($_SESSION[self::USER_TOKEN_KEY])) {
@@ -31,11 +31,11 @@ final class Session {
         return $_SESSION[self::USER_TOKEN_KEY];
     }
 
-    public static function setAuthToken(string $token): void {
+    public static function setUserToken(string $token): void {
         $_SESSION[self::USER_TOKEN_KEY] = $token;
     }
 
-    public static function delAuthToken(): void {
+    public static function delUserToken(): void {
         unset($_SESSION[self::USER_TOKEN_KEY]);
     }
 
