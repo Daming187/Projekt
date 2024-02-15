@@ -92,7 +92,7 @@ $app->post('/login', function (Request $request, Response $response) use ($app) 
 
     $loginIdAdmin = '241';
     /** @psalm-suppress MixedAssignment */
-    $passwordAdmin = 'MGj65qtAuT';
+    $passwordAdmin = '';
 
 
     /** @psalm-suppress MixedArgument */
