@@ -13,6 +13,9 @@ use Middlewares\PhpSession;
 
 use Dleschner\Slim\Session;
 use Dleschner\Slim\Starface;
+
+use Dleschner\Slim\Client\Login;
+
 use Slim\Psr7\Response as Psr7Response;
 
 require(__DIR__.'/../vendor/autoload.php');
@@ -20,7 +23,7 @@ require(__DIR__.'/../vendor/autoload.php');
 ini_set('session.use_cookies', false);
 ini_set('session.cache_limiter', '');
 
-$ini = parse_ini_file(__DIR__.'/.cred.ini');
+$ini = parse_ini_file(__DIR__.'/../.cred.ini');
 
 $loader = new \Twig\Loader\FilesystemLoader(__DIR__.'/../views');
 $twig = new \Twig\Environment($loader, [
@@ -51,13 +54,10 @@ function castObjecct(string $classname, $value) {
 $app = AppFactory::create();
 
 $app->add(function (Request $request, RequestHandler $handler) use ($app) {
-    /* * @psalm-suppress MixedAssignment */
     if ($route = castObjecct(Route::class, $request->getAttribute(RouteContext::ROUTE))) {
-        //if ($route instanceof Route) {
-            if (in_array($route->getName(), ['login', 'login-post', 'logout'])) {
-                return $handler->handle($request);
-            }
-        //}
+        if (in_array($route->getName(), ['login', 'login-post', 'logout'])) {
+            return $handler->handle($request);
+        }
     }
 
     if ( !Session::hasUserToken()) {
@@ -81,35 +81,33 @@ $app->get('/login', function (Request $request, Response $response) use ($twig) 
     return $response;
 })->setName('login');
 
-$app->post('/login', function (Request $request, Response $response) use ($app) {
-    
-    $params = (array)$request->getParsedBody();
+$app->post('/login', function (Request $request, Response $response) use ($app, $ini) {
+    try {
+        $userParams = Login::parse($request->getParsedBody());
+    } catch (RuntimeException $oje) {
+        $response->getBody()->write('400 Bad Request');
+        return $response->withStatus(400);
+    }
 
-    /** @psalm-suppress MixedAssignment */
-    $loginId = $params['loginId'];
-    /** @psalm-suppress MixedAssignment */
-    $password = $params['password'];
+    try {
+        $adminParams = Login::parse($ini);
+    } catch (RuntimeException $oje) {
+        $response->getBody()->write('500 Internal Server Error parse');
+        return $response->withStatus(500);
+    }
 
-    $loginIdAdmin = '241';
-    /** @psalm-suppress MixedAssignment */
-    $passwordAdmin = 'MGj65qtAuT';
+    $adminToken = Starface::getAuthToken($adminParams->loginId, $adminParams->password);
+    if ( !isset($adminToken)) {
+        $response->getBody()->write('500 Internal Server Error login');
+        return $response->withStatus(500);
+    }
 
-
-    /** @psalm-suppress MixedArgument */
-    $authToken = Starface::getAuthToken($loginId, $password);
+    $authToken = Starface::getAuthToken($userParams->loginId, $userParams->password);
     if ( !isset($authToken)) {
         return $response
             ->withHeader('Location', urlFor($app, 'login'))
             ->withStatus(303);
     }
-
-    $adminToken = Starface::getAuthToken($loginIdAdmin, $passwordAdmin);
-    if ( !isset($adminToken)) {
-        return $response
-            ->withHeader('Location', urlFor($app, 'login'))
-            ->withStatus(500);
-    }
-
 
     Session::setUserToken($authToken);
     Session::setAdminToken($adminToken);
@@ -144,7 +142,7 @@ $app->any('/groups', function (Request $_request, Response $response) use ($twig
 
     $groups = Starface::getGroups($adminToken);
     $response->getBody()->write($twig->render('groups.html', [
-        'groups' => $groups
+        'groups' => $groups->items
     ]));
 
     return $response;
@@ -163,5 +161,17 @@ $app->any('/groups/{id}', function (Request $request, Response $response, $args)
     return $response;
 })->setName('group');
 
+/** @psalm-suppress MissingClosureParamType */
+$app->any('/groups/{id}/edit', function (Request $request, Response $response, $args) use ($twig) {
+    $adminToken = Session::getAdminToken();
+
+    /** @psalm-suppress MixedArrayAccess */
+    $group = Starface::getGroup($adminToken, (int)$args['id']);
+    $response->getBody()->write($twig->render('groupEdit.html', [
+        'group' => $group
+    ]));
+
+    return $response;
+})->setName('groupEdit');
 
 $app->run();

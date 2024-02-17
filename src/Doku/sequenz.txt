@@ -1,0 +1,26 @@
+
+b --> a GET /groups
+a --> s GET /groups
+a <-- s JSON mit allen Gruppen
+b <-- a HTML Seite mit Gruppen und Links zu einzelnen Gruppe
+
+b --> a GET /groups/{id}
+a --> s GET /groups/{id}
+a <-- s JSON zu einer Gruppe
+b <-- a HTML Seite der Gruppe mit Edit-Link
+
+b --> a GET /groups/{id}/edit
+a --> s GET /groups/{id}
+a <-- s JSON zu einer Gruppe
+b <-- a HTML Formular um die Gruppe zu ändern
+
+b --> a POST /groups/{id}/edit
+a --> s GET /groups/{id}
+a <-- s JSON zu einer Gruppe
+a --> s PUT /groups + JSON zur Gruppe + Änderungen
+a <-- s Success or Failure
+(b <-- a Failure: HTML Formular um die Gruppe zu ändren + Fehler)
+b <-- a Success: HTTP Redirect zu Seite der Gruppe
+
+b --> a GET /group/{id}
+b <-- a HTML Seite der Gruppe mit Edit-Link

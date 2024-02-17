@@ -15,8 +15,17 @@ class AssignableUsers {
         public readonly string $firstname,
         public readonly int    $id,
         public readonly string $lastname,
-
     ) { }
+
+    public function setAssigned(bool $assigned): self {
+        if ($assigned == $this->assigned) return $this;
+        return new self(
+            $assigned,
+            $this->firstname,
+            $this->id,
+            $this->lastname
+        );
+    }
 
     /**
      * Diese Funktionen gibt dem Rückgabewert die folgende Struktur
@@ -25,7 +34,6 @@ class AssignableUsers {
      */
     public function toMixed() {
         return [
-            
             'assigned' => $this->assigned,
             'firstname' => $this->firstname,
             'id' => $this->id,
