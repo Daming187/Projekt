@@ -25,6 +25,35 @@ class Group {
         public readonly array  $assignableUsers,
     ) { }
 
+    public function setAssigned(int $assignableUserId, bool $assigned): self {
+        return new self(
+            $this->id, $this->name, $this->groupId, $this->chatGroup,
+            $this->voicemail, $this->assignableNumbers,
+            array_map(function(AssignableUsers $user) use ($assignableUserId, $assigned): AssignableUsers {
+                if ($user->id == $assignableUserId) {
+                    return $user->setAssigned($assigned);
+                }
+                return $user;
+            }, $this->assignableUsers)
+        );
+
+        /*
+        $newAssignableUsers = [];
+        foreach ($this->assignableUsers as $user) {
+            if ($user->id == $assignableUserId) {
+                $newAssignableUsers[] = $user->setAssigned($assigned);
+            } else {
+                $newAssignableUsers[] = $user;
+            }
+        }
+        return new self(
+            $this->id, $this->name, $this->groupId, $this->chatGroup,
+            $this->voicemail, $this->assignableNumbers,
+            $newAssignableUsers
+        );
+        */
+    }
+
     /**
      * Diese Funktionen gibt dem Rückgabewert die folgende Struktur
      * 

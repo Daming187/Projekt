@@ -10,14 +10,18 @@
             <li>
                 <strong>{{ key }}:</strong>
                 <ul>
-                    {% for key, value in value %}
-                        <li>
-                            <strong>{{ key }}:</strong> {{ value }}
-                            {% if key == "id" %}
-                            <a href=" /groups/{{ value }}">zu Gruppe</a>
-                            {%endif%}
-                        </li>
-                    {% endfor %}
+                    <li>
+                        <strong>Gruppenname:</strong> {{ value.groupname }}
+                        {% if value.id %}
+                        <a href=" /groups/{{ value.id }}">zu Gruppe</a>
+                        {%endif%}
+                    </li>
+                    <li>    
+                        <strong>Groupexternalnumber:</strong> {{ value.groupexternalnumber }}
+                    </li>
+                    <li>    
+                        <strong>Groupinternalnumber:</strong> {{ value.groupinternalnumber }}
+                    </li>
                 </ul>
             </li>
         {% endfor %}

@@ -1,41 +1,50 @@
 <?php
 
 namespace Dleschner\Slim\Starface;
+use Dleschner\Slim\Parsers;
 
+/**
+ * Enthält Daten die zum Login von und zur Starface gesendet werden.
+ */
 class Login {
 
-    private readonly string $nonce;
-    private readonly ?string $secret;
-
-    private function __construct(string $nonce, ?string $secret) {
-        $this->nonce = $nonce;
-        $this->secret = $secret;
-    }
+    private function __construct(
+        public readonly string $nonce,
+        public readonly ?string $secret,
+    ) { }
 
     public function updateSecret(string $loginId, string $password): Login {
         $secret = $loginId.':'.hash('sha512',$loginId.$this->nonce.hash('sha512', $password));
         return new Login($this->nonce, $secret);
     }
 
-    public function toJson(): string {
-        return json_encode([
+        /**
+     * Diese Funktionen gibt dem Rückgabewert die folgende Struktur
+     * 
+     * @return mixed
+     */
+    public function toMixed() {
+        return [
             'loginType' => 'Internal',
             'nonce' => $this->nonce,
             'secret' => $this->secret,
-        ]);
+        ];
     }
 
-    public static function fromJson(string $json): ?Login {
-        $json = json_decode($json, true);
-        if ( !is_array($json)) return null;
+    /** @param mixed $value */
+    public static function parse($value): self {
+        $args = [];
 
-        if ( !isset($json['nonce'])) return null;
-        if ( !is_string($json['nonce'])) return null;
+        $value = Parsers::parseArray($value);
 
-        if (isset($json['secret']) && !is_string($json['secret'])) {
-            return null;
-        }
-
-        return new Login($json['nonce'], $json['secret']);
+        $args['nonce'] = Parsers::parseStringField('nonce', $value);
+        $args['secret'] = Parsers::parseOptional(
+            function(array $value) {
+                return Parsers::parseStringField('secret', $value);
+            },
+            $value
+        );
+        
+        return new self(...$args);
     }
 }
