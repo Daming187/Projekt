@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Gruppe</title>
-</head>
-<body>
-    <h1>Gruppe</h1><br>
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Gruppe: {{ group.name }}</h1><br>
     <ul>
         <li>
             <strong>id: </strong>{{ group.id }}
@@ -17,28 +13,21 @@
         </li>
         <li>
             <strong>AssignableUsers:</strong>
+            <ul>
         {% for user in  group.assignableUsers %}
-                <ul>
                     <li>
-                        <strong>assigned:</strong> {{ user.assigned ? 'ja' : 'nein' }}
+                        <div>
+                            <strong>{{ user.assigned ? 'ja' : 'nein' }}</strong> {{ user.id }}: {{ user.firstname }} {{ user.lastname}}
+                        </div>
                     </li>
-                    <li>
-                        <strong>firstname:</strong> {{ user.firstname }}
-                    </li>
-                    <li>
-                        <strong>id:</strong> {{ user.id }}
-                    </li>
-                    <li>
-                        <strong>lastname:</strong> {{ user.lastname}}
-                    </li>
-                </ul>
         {% endfor %}
+           </ul>
         </li>
     </ul>
-    <a href=" /groups/{{ value.id }}/edit" class="button">Ändern</a><br>
+    <button onclick=" location.href='/groups/{{ group.id }}/edit'" class="button">Ändern</button>
     <br>
-    <a href=" users/me">Benutzer</a><br>
-    <a href=" /groups">Gruppen</a><br>
-    <a href=" /logout">Ausloggen</a><br>
-</body>
-</html>
+    <br>
+    <button onclick=" location.href='/users/me'" class="button">Benutzer</button>
+    <button onclick=" location.href='/groups'" class="button">Gruppen</button>
+    <button onclick=" location.href='/logout'" class="button">Ausloggen</button>
+{% endblock %}

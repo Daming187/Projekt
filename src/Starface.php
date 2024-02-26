@@ -109,18 +109,17 @@ final class Starface {
         return Group::parse(json_decode($response->getBody()->getContents(), true));
     }
 
-    public static function putGroup(string $authToken, int $id, Group $group): Group {
+    public static function putGroup(string $authToken, Group $group): void {
         $client = new \GuzzleHttp\Client();
-        $response = $client->request('PUT', self::UPGROUP_URL.'/'.$id, [
+        $client->request('PUT', self::UPGROUP_URL, [
             'headers' => [
                 'X-Version' => '2',
                 'Content-Type' => 'application/json',
-                'Authorization' =>  $authToken,
+                'authToken' =>  $authToken,
             ],
             'json' => $group->toMixed(),
         ]);
-        return Group::parse(json_decode($response->getBody()->getContents(), true));
-    } 
+    }
 }
 
 

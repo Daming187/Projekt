@@ -15,6 +15,7 @@ use Dleschner\Slim\Session;
 use Dleschner\Slim\Starface;
 
 use Dleschner\Slim\Client\Login;
+use Dleschner\Slim\Client\GroupEdit;
 
 use Slim\Psr7\Response as Psr7Response;
 
@@ -162,7 +163,7 @@ $app->any('/groups/{id}', function (Request $request, Response $response, $args)
 })->setName('group');
 
 /** @psalm-suppress MissingClosureParamType */
-$app->any('/groups/{id}/edit', function (Request $request, Response $response, $args) use ($twig) {
+$app->get('/groups/{id}/edit', function (Request $request, Response $response, $args) use ($twig) {
     $adminToken = Session::getAdminToken();
 
     /** @psalm-suppress MixedArrayAccess */
@@ -173,5 +174,28 @@ $app->any('/groups/{id}/edit', function (Request $request, Response $response, $
 
     return $response;
 })->setName('groupEdit');
+
+/** @psalm-suppress MissingClosureParamType */
+$app->post('/groups/{id}/edit', function (Request $request, Response $response, $args) use ($app, $twig) {
+    $adminToken = Session::getAdminToken();
+
+    $users = GroupEdit::parse($request->getParsedBody())->users;
+
+    /** @psalm-suppress MixedArrayAccess */
+    $group = Starface::getGroup($adminToken, (int)$args['id']);
+
+    foreach ($group->assignableUsers as $assignableUser) {
+        $id = $assignableUser->id;
+        if (isset($users[$id])) {
+            $group = $group->setAssigned($id, $users[$id]);
+        }
+    }
+
+    Starface::putGroup($adminToken, $group);
+
+    return $response
+        ->withHeader('Location', urlFor($app, 'group', [ 'id' => $group->id]))
+        ->withStatus(303);
+});
 
 $app->run();

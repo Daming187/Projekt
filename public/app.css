@@ -1,0 +1,133 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  color: #39454c;
+  background-color: #ebebeb;
+
+  font-size: 17px;
+  font-family: "Oxygen", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-weight: 300;
+  line-height: 22px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #39454c;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 10px 0 25px 0;
+  font-size: 30px;
+  line-height: 30px;
+}
+h2 {
+  margin: 0 0 20px 0;
+  font-size: 30px;
+  line-height: 30px;
+}
+h3, h4, h5, h6 {
+  margin: 0 0 10px 0;
+  font-size: 20px;
+  line-height: 20px;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.PageLayout {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+}
+.PageLayout > .header-wrapper {
+  height: 70px;
+  z-index: 10;
+  padding: 0 0px;
+
+  background-color: #EBEBEB;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAA8CAMAAAB7GJvLAAAA81BMVEULDg8NERQQFRgTGBwVGx4ZHB0XHSEYHyMZICQaISUaISYaIiYaIicbIycbIygeIyYcJCgcJCkdJSodJiseJiseJywfKC0fKC4jKCsgKS4gKi8hKjAhKzAiKzEiLDImLDAjLTIjLTMkLjQnLjIkLzUnLzMnLzQlMDYmMDcoMDQmMTcpMTUpMTYnMjgnMjkqMjcnMzkrMzcoNDopNDsrNDgpNTwsNToqNj0qNz4rNz4tNzsuNzwrOD8vOD4sOUAwOT8tOkEtOkItO0IuO0MxO0EvPEQzPEMvPUU0PkQ0PkU1QEY2QUc3Q0k4RUs5Rk05R007SFA2ZMycAAAAlElEQVQI1xXE1xqBAACA0d8KJRTZhey9Za8km/d/Gp9zcSCAx4M3hs+HP4MgECwSChGuIIpINSSJSB1ZRm4RjRLvoCgoXVQVdUAiQXKEpqFNSaVIz8lmya3I5yms0XWMLaUS5T2mSfVMo0HzQrtN78pwyPjOZMLsgWWxfLLZsHtxOHD6YNu4X1z3v+NwfLNY0L9hGD9abBG3j+95VwAAAABJRU5ErkJggg==');
+  background-repeat: repeat-x;
+}
+
+.PageLayout > .header-wrapper > .header {
+  position: relative;
+  height: 100%;
+  z-index: 100;
+  border-bottom: 10px solid #2774c7;
+  
+  box-sizing: border-box;
+}
+
+.PageLayout > .header-wrapper > .header > .menu {
+  height: 60px;
+  border-bottom: 1px solid #66a8d7;
+  display: flex;
+}
+.PageLayout > .header-wrapper > .header > .menu > .logo {
+  display: block;
+  float: left;
+  padding: 10px 20px 10px 10px;
+  height: 60px;
+
+  border-right: 1px solid #181f23;
+  box-sizing: border-box;
+}
+
+.PageLayout > .header-wrapper > .header > .menu > .logo {
+  color: white;
+  text-decoration: none;
+}
+.PageLayout > .header-wrapper > .header > .menu > .logo > span {
+  font-weight: 900;
+  vertical-align: middle;
+  text-transform: uppercase;
+  padding-left: 10px;
+}
+.PageLayout > .header-wrapper > .header > .menu > .logo > svg {
+  vertical-align: middle;
+}
+.PageLayout > .header-wrapper > .header > .menu > .logo > svg .a {
+  transition: fill .5s;
+  fill: #2774C7;
+}
+.PageLayout > .header-wrapper > .header > .menu > .logo:hover > svg .a {
+  fill: white;
+}
+.PageLayout > .header-wrapper > .header > .menu > .logo > svg .b {
+  transition: fill .5s;
+  fill: white;
+}
+.PageLayout > .header-wrapper > .header > .menu > .logo:hover > svg .b {
+  fill: #2774C7;
+}
+.PageLayout > .header-wrapper > .header > .menu > .center {
+  flex-grow: 1;
+}
+
+.PageLayout > .content {
+  flex: auto;
+  padding: 10px;
+
+  display: row;
+  flex-direction: column;
+}
+
+button {
+  width: fit-content;
+  color: #39454c;
+  font-size: 17px;
+  font-family: "Oxygen", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-weight: 300;
+  line-height: 22px;
+
+}

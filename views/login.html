@@ -1,8 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-</head>
-<body>
+{% extends "layout.html" %}
+{% block content %}
     <form method="POST">
         <label for="loginId">Login Id</label>
         <input id="loginId" name="loginId" value=""><br>
@@ -10,5 +7,4 @@
         <input type="password" id="password" name="password" value=""><br>
         <input type="submit" value="Login">
     </form>
-</body>
-</html>
+{% endblock %}

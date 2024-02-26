@@ -1,32 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Gruppen</title>
-</head>
-<body>
+{% extends "layout.html" %}
+{% block content %}
     <h1>Gruppen</h1><br>
     <ul>
         {% for key, value in  groups %}
-            <li>
-                <strong>{{ key }}:</strong>
-                <ul>
                     <li>
                         <strong>Gruppenname:</strong> {{ value.groupname }}
                         {% if value.id %}
-                        <a href=" /groups/{{ value.id }}">zu Gruppe</a>
-                        {%endif%}
-                    </li>
-                    <li>    
-                        <strong>Groupexternalnumber:</strong> {{ value.groupexternalnumber }}
-                    </li>
-                    <li>    
+                        <a href=" /groups/{{ value.id }}">zu Gruppe</a><br>
+                        {%endif%}  
+                        <strong>Groupexternalnumber:</strong> {{ value.groupexternalnumber }}<br> 
                         <strong>Groupinternalnumber:</strong> {{ value.groupinternalnumber }}
-                    </li>
-                </ul>
-            </li>
+                    </li><br>
         {% endfor %}
     </ul>
-    <a href=" users/me">Benutzer</a><br>
-    <a href=" /logout">Ausloggen</a><br>
-</body>
-</html>
+    <button onclick=" location.href='/users/me'" class="button">Benutzer</button> 
+    <button onclick=" location.href='/logout'" class="button">Ausloggen</button>
+{% endblock %}

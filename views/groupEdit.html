@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Gruppe</title>
-</head>
-<body>
-    <h1>Gruppe</h1><br>
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Gruppe: {{ group.name }}</h1><br>
+    <form method="POST">
     <ul>
         <li>
             <strong>id: </strong>{{ group.id }}
@@ -17,28 +14,28 @@
         </li>
         <li>
             <strong>AssignableUsers:</strong>
-        {% for user in  group.assignableUsers %}
-                <ul>
-                    <li>
-                        <strong>assigned:</strong> {{ user.assigned ? 'ja' : 'nein' }}
-                    </li>
-                    <li>
-                        <strong>firstname:</strong> {{ user.firstname }}
-                    </li>
-                    <li>
-                        <strong>id:</strong> {{ user.id }}
-                    </li>
-                    <li>
-                        <strong>lastname:</strong> {{ user.lastname}}
-                    </li>
-                </ul>
+        </li>   
+    <ul>
+        {% for user in  group.assignableUsers %}     
+                <li>
+                    <div>
+                        <select name="assigned[{{ user.id }}]" size="1">
+                            <option value="1"{{ user.assigned ? " selected" : '' }}>Ja</option>
+                            <option value="0"{{ not user.assigned ? " selected" : '' }}>Nein</option>
+                        </select>
+                        {{ user.id }}: {{ user.firstname }} {{ user.lastname}}
+                    </div>
+                </li>
         {% endfor %}
+            </ul>
         </li>
     </ul>
-    <a href="group.html" class="button">Abbrechen</a><br>
+    <button type="submit">speichern</button>
+    <button onclick=" location.href='/groups/{{ group.id }}'" class="button">Abbrechen</button>
     <br>
-    <a href=" users/me">Benutzer</a><br>
-    <a href=" /groups">Gruppen</a><br>
-    <a href=" /logout">Ausloggen</a><br>
-</body>
-</html>
+    <br>
+    <button onclick=" location.href='/users/me'" class="button">Benutzer</button> 
+    <button onclick=" location.href='/groups'" class="button">Gruppen</button>
+    <button onclick=" location.href='/logout'" class="button">Ausloggen</button>
+</form>
+{% endblock %}
