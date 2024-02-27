@@ -122,6 +122,12 @@ table {
   flex-direction: column;
 }
 
+.kachel {
+  width: fit-content;
+  display: inline-block;
+  background-color: white;
+} 
+
 button {
   width: fit-content;
   color: #39454c;
@@ -131,3 +137,5 @@ button {
   line-height: 22px;
 
 }
+
+

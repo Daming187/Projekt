@@ -13,7 +13,7 @@ class Group {
      * die sind Schreibgeschützt und können nach der Instanziierung nicht geändert werden
      * 
      * @param list<AssignableNumber> $assignableNumbers
-     * @param list<AssignableUsers> $assignableUsers
+     * @param list<AssignableUser> $assignableUsers
      */
     private function __construct(
         public readonly int    $id,
@@ -29,7 +29,7 @@ class Group {
         return new self(
             $this->id, $this->name, $this->groupId, $this->chatGroup,
             $this->voicemail, $this->assignableNumbers,
-            array_map(function(AssignableUsers $user) use ($assignableUserId, $assigned): AssignableUsers {
+            array_map(function(AssignableUser $user) use ($assignableUserId, $assigned): AssignableUser {
                 if ($user->id == $assignableUserId) {
                     return $user->setAssigned($assigned);
                 }
@@ -38,18 +38,18 @@ class Group {
         );
 
         /*
-        $newAssignableUsers = [];
+        $newAssignableUser = [];
         foreach ($this->assignableUsers as $user) {
             if ($user->id == $assignableUserId) {
-                $newAssignableUsers[] = $user->setAssigned($assigned);
+                $newAssignableUser[] = $user->setAssigned($assigned);
             } else {
-                $newAssignableUsers[] = $user;
+                $newAssignableUser[] = $user;
             }
         }
         return new self(
             $this->id, $this->name, $this->groupId, $this->chatGroup,
             $this->voicemail, $this->assignableNumbers,
-            $newAssignableUsers
+            $newAssignableUser
         );
         */
     }
@@ -75,7 +75,7 @@ class Group {
             ),
             'assignableUsers' => array_map(
                 /** @return mixed */
-                function (AssignableUsers $assignableUser) {
+                function (AssignableUser $assignableUser) {
                     return $assignableUser->toMixed();
                 },
                 $this->assignableUsers
@@ -101,7 +101,7 @@ class Group {
         $args['assignableNumbers'] = Parsers::parseListOf(AssignableNumber::parse(...), $value['assignableNumbers']);
 
         if ( !array_key_exists('assignableUsers', $value)) throw new RuntimeException();
-        $args['assignableUsers'] = Parsers::parseListOf(AssignableUsers::parse(...), $value['assignableUsers']);
+        $args['assignableUsers'] = Parsers::parseListOf(AssignableUser::parse(...), $value['assignableUsers']);
         
         return new self(...$args);
     }

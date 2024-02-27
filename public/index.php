@@ -16,7 +16,7 @@ use Dleschner\Slim\Starface;
 
 use Dleschner\Slim\Client\Login;
 use Dleschner\Slim\Client\GroupEdit;
-
+use Dleschner\Slim\Parsers;
 use Slim\Psr7\Response as Psr7Response;
 
 require(__DIR__.'/../vendor/autoload.php');
@@ -26,14 +26,20 @@ ini_set('session.cache_limiter', '');
 
 $ini = parse_ini_file(__DIR__.'/../.cred.ini');
 
+
 $loader = new \Twig\Loader\FilesystemLoader(__DIR__.'/../views');
 $twig = new \Twig\Environment($loader, [
     'debug' => true,
 ]);
 
+$starface = new Starface(Parsers::parseUrlField($ini));
+
+/**
+ * @param array<string, string> $data
+ * @param array<string, string> $queryParams
+ */
 function urlFor(App $app, string $routeName, array $data = [], array $queryParams = []): string {
     $routeParser = $app->getRouteCollector()->getRouteParser();
-    /** @psalm-suppress MixedArgumentTypeCoercion */
     return $routeParser->urlFor($routeName, $data , $queryParams);
 } 
 
@@ -82,7 +88,7 @@ $app->get('/login', function (Request $request, Response $response) use ($twig) 
     return $response;
 })->setName('login');
 
-$app->post('/login', function (Request $request, Response $response) use ($app, $ini) {
+$app->post('/login', function (Request $request, Response $response) use ($app, $ini, $starface) {
     try {
         $userParams = Login::parse($request->getParsedBody());
     } catch (RuntimeException $oje) {
@@ -97,13 +103,13 @@ $app->post('/login', function (Request $request, Response $response) use ($app, 
         return $response->withStatus(500);
     }
 
-    $adminToken = Starface::getAuthToken($adminParams->loginId, $adminParams->password);
+    $adminToken = $starface->getAuthToken($adminParams->loginId, $adminParams->password);
     if ( !isset($adminToken)) {
         $response->getBody()->write('500 Internal Server Error login');
         return $response->withStatus(500);
     }
 
-    $authToken = Starface::getAuthToken($userParams->loginId, $userParams->password);
+    $authToken = $starface->getAuthToken($userParams->loginId, $userParams->password);
     if ( !isset($authToken)) {
         return $response
             ->withHeader('Location', urlFor($app, 'login'))
@@ -128,20 +134,21 @@ $app->any('/logout', function (Request $request, Response $response) use ($app) 
 })->setName('logout');
 
 
-$app->any('/users/me', function (Request $request, Response $response) use ($twig) {
+$app->any('/users/me', function (Request $request, Response $response) use ($twig, $starface) {
     $authToken = Session::getUserToken();
 
-    $usersMe = Starface::getUsersMe($authToken);
-    /** @psalm-suppress PossiblyNullArgument */
-    $response->getBody()->write($twig->render('usersMe.html', $usersMe));
+    $user = $starface->getUsersMe($authToken);
+    $response->getBody()->write($twig->render('usersMe.html', [
+        'user' => $user
+    ]));
 
     return $response;
 })->setName('usersMe');
 
-$app->any('/groups', function (Request $_request, Response $response) use ($twig) {
+$app->any('/groups', function (Request $_request, Response $response) use ($twig, $starface) {
     $adminToken = Session::getAdminToken();
 
-    $groups = Starface::getGroups($adminToken);
+    $groups = $starface->getGroups($adminToken);
     $response->getBody()->write($twig->render('groups.html', [
         'groups' => $groups->items
     ]));
@@ -149,12 +156,10 @@ $app->any('/groups', function (Request $_request, Response $response) use ($twig
     return $response;
 })->setName('groups');
 
-/** @psalm-suppress MissingClosureParamType */
-$app->any('/groups/{id}', function (Request $request, Response $response, $args) use ($twig) {
+$app->any('/groups/{id}', function (Request $_request, Response $response, array $args) use ($twig, $starface) {
     $adminToken = Session::getAdminToken();
 
-    /** @psalm-suppress MixedArrayAccess */
-    $group = Starface::getGroup($adminToken, (int)$args['id']);
+    $group = $starface->getGroup($adminToken, Parsers::parseIdField($args));
     $response->getBody()->write($twig->render('group.html', [
         'group' => $group
     ]));
@@ -162,12 +167,10 @@ $app->any('/groups/{id}', function (Request $request, Response $response, $args)
     return $response;
 })->setName('group');
 
-/** @psalm-suppress MissingClosureParamType */
-$app->get('/groups/{id}/edit', function (Request $request, Response $response, $args) use ($twig) {
+$app->get('/groups/{id}/edit', function (Request $_request, Response $response, array $args) use ($twig, $starface) {
     $adminToken = Session::getAdminToken();
 
-    /** @psalm-suppress MixedArrayAccess */
-    $group = Starface::getGroup($adminToken, (int)$args['id']);
+    $group = $starface->getGroup($adminToken, Parsers::parseIdField($args));
     $response->getBody()->write($twig->render('groupEdit.html', [
         'group' => $group
     ]));
@@ -175,14 +178,12 @@ $app->get('/groups/{id}/edit', function (Request $request, Response $response, $
     return $response;
 })->setName('groupEdit');
 
-/** @psalm-suppress MissingClosureParamType */
-$app->post('/groups/{id}/edit', function (Request $request, Response $response, $args) use ($app, $twig) {
+$app->post('/groups/{id}/edit', function (Request $request, Response $response, array $args) use ($app, $starface) {
     $adminToken = Session::getAdminToken();
 
     $users = GroupEdit::parse($request->getParsedBody())->users;
 
-    /** @psalm-suppress MixedArrayAccess */
-    $group = Starface::getGroup($adminToken, (int)$args['id']);
+    $group = $starface->getGroup($adminToken, Parsers::parseIdField($args));
 
     foreach ($group->assignableUsers as $assignableUser) {
         $id = $assignableUser->id;
@@ -191,10 +192,10 @@ $app->post('/groups/{id}/edit', function (Request $request, Response $response, 
         }
     }
 
-    Starface::putGroup($adminToken, $group);
+    $starface->putGroup($adminToken, $group);
 
     return $response
-        ->withHeader('Location', urlFor($app, 'group', [ 'id' => $group->id]))
+        ->withHeader('Location', urlFor($app, 'group', [ 'id' => (string)$group->id ]))
         ->withStatus(303);
 });
 

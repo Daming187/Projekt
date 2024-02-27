@@ -1,13 +1,15 @@
 {% extends "layout.html" %}
 {% block content %}
         <h1>Benutzer: </h1><br>
-        <a>Email: {{email}}</a><br>
-        <a>FirstName: {{firstName}}</a><br>
-        <a>FamilyName: {{familyName}}</a><br>
-        <a>Id: {{id}}</a><br>
-        <a>Language: {{language}}</a><br>
-        <a>Login: {{login}}</a><br>
-        <a>PersonId: {{personId}}</a><br>
+        <div class="kachel">
+        <a>Email: {{user.email}}</a><br>
+        <a>FirstName: {{user.firstName}}</a><br>
+        <a>FamilyName: {{user.familyName}}</a><br>
+        <a>Id: {{user.id}}</a><br>
+        <a>Language: {{user.language}}</a><br>
+        <a>Login: {{user.login}}</a><br>
+        <a>PersonId: {{user.personId}}</a><br>
+        </div>
         <br>
         <button onclick=" location.href='/groups'" class="button">Gruppen</button>
         <button onclick=" location.href='/logout'" class="button">Ausloggen</button>

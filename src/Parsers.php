@@ -19,9 +19,8 @@ final class Parsers {
 
     /**
      * Diese Funktion prüft ob der Wert in Value ein Array ist
-     *  @param mixed $value 
      */ 
-    public static function parseArray($value): array {
+    public static function parseArray(mixed $value): array {
         if ( !is_array($value)) throw new RuntimeException();
         return $value;
     }
@@ -70,7 +69,7 @@ final class Parsers {
         //return self::getOptionalStringFieldParser($key)($array);
         //return self::getOptionalParser(self::getFieldParser($key, self::getStringParser()))($value);
     }
-
+    
     /**
      * Diese Funktion prüft ob der Wert ein Array ist und ob dieser eine Liste ist.
      * Dann wirft es den Wert in die Funktion array_map rein, 
@@ -78,12 +77,11 @@ final class Parsers {
      *
      * @template T
      * 
-     * @param callable(mixed):T $parser* 
-     * @param mixed             $value        
+     * @param callable(mixed):T $parser
      * 
      * @return list<T>
      */
-    public static function parseListOf(callable $parser, $value): array {
+    public static function parseListOf(callable $parser, mixed $value): array {
         if ( !is_array($value)) throw new RuntimeException();
         if ( !array_is_list($value)) throw new RuntimeException();
         
@@ -98,11 +96,10 @@ final class Parsers {
      * @template T
      * 
      * @param callable(mixed):T $parser
-     * @param mixed             $value        
      * 
      * @return ?T
      */
-    public static function parseOptional(callable $parser, $value) {
+    public static function parseOptional(callable $parser, mixed $value) {
         try {
             return $parser($value);
         } catch (FieldNotFound|IsNull $_oje) {}
@@ -110,8 +107,20 @@ final class Parsers {
         return null;
     }
 
+    public static function parseTokenField(mixed $value): string {
+        $value = self::parseArray($value);
+        return self::parseStringField('token', $value);
+    }
 
+    public static function parseUrlField(mixed $value): string {
+        $value = self::parseArray($value);
+        return self::parseStringField('url', $value);
+    }
 
+    public static function parseIdField(mixed $value): int {
+        $value = self::parseArray($value);
+        return (int)self::parseStringField('id', $value);
+    }
 
 
 
@@ -123,7 +132,7 @@ final class Parsers {
      * @param callable(mixed):T $parser
      * 
      * @return callable(array):T
-     */
+     * /
     public static function getFieldParser(string $key, callable $parser): callable {
         return function(array $value) use ($key, $parser) {
             if ( !array_key_exists($key, $value)) throw new FieldNotFound($key);
@@ -137,7 +146,7 @@ final class Parsers {
      * @param callable(mixed):T $parser
      * 
      * @return callable(mixed):?T
-     */
+     * /
     public static function getOptionalParser(callable $parser): callable {
         return function($value) use ($parser) {
             try {
@@ -149,7 +158,7 @@ final class Parsers {
 
     /**
      * @return callable(mixed):string
-     */
+     * /
     public static function getStringParser(): callable {
         return function($value) {
             if (is_null($value)) throw new IsNull();
@@ -158,7 +167,7 @@ final class Parsers {
         };
     }
 
-    /** @param mixed $value */
+    /** @param mixed $value * /
     public static function stringParser($value): string {
         if (is_null($value)) throw new IsNull();
         if ( !is_string($value)) throw new RuntimeException();
@@ -167,8 +176,10 @@ final class Parsers {
 
     /**
      * @return callable(array):?string
-     */
+     * /
     public function getOptionalStringFieldParser(string $key): callable {
         return self::getOptionalParser(self::getFieldParser($key, self::stringParser(...)));
     }
+
+    /** catch */
 }

@@ -2,8 +2,6 @@
 
 namespace Dleschner\Slim\Starface;
 
-use RuntimeException;
-
 use Dleschner\Slim\Parsers;
 
 class Tag {
