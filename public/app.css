@@ -115,18 +115,42 @@ table {
 }
 
 .PageLayout > .content {
-  flex: auto;
-  padding: 10px;
-
-  display: row;
+  padding: 15px;
   flex-direction: column;
 }
 
-.kachel {
-  width: fit-content;
-  display: inline-block;
-  background-color: white;
+.flex {
+  display: inline-flex;
+
+  
 } 
+.flex > DIV {
+  width: 300px;
+  height: max-content;
+  padding: 25px;
+  background-color: white;
+  border: 1px solid #2774C7;
+}
+.flex > .false {
+  width: 300px;
+  height: max-content;
+  padding: 25px;
+  background-color: #2774c76b;
+  border: 1px solid #2774C7;
+}
+.flex > .user{
+  width: fit-content;
+  padding: 25px;
+  background-color: white;
+  border: 1px solid #2774C7;
+}
+
+.flex > .groups{
+  width: fit-content;
+  padding: 25px;
+  background-color: white;
+  border: 1px solid #2774C7;
+}
 
 button {
   width: fit-content;

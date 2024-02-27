@@ -1,15 +1,18 @@
 {% extends "layout.html" %}
 {% block content %}
         <h1>Benutzer: </h1><br>
-        <div class="kachel">
-        <a>Email: {{user.email}}</a><br>
-        <a>FirstName: {{user.firstName}}</a><br>
-        <a>FamilyName: {{user.familyName}}</a><br>
-        <a>Id: {{user.id}}</a><br>
-        <a>Language: {{user.language}}</a><br>
-        <a>Login: {{user.login}}</a><br>
-        <a>PersonId: {{user.personId}}</a><br>
-        </div>
+            <div class="flex">
+                <div class="user">
+                   <a>Email: {{user.email}}</a><br>
+                   <a>FirstName: {{user.firstName}}</a><br>
+                   <a>FamilyName: {{user.familyName}}</a><br>
+                   <a>Id: {{user.id}}</a><br>
+                   <a>Language: {{user.language}}</a><br>
+                   <a>Login: {{user.login}}</a><br>
+                   <a>PersonId: {{user.personId}}</a><br>
+                </div>
+            </div>
+        <br>
         <br>
         <button onclick=" location.href='/groups'" class="button">Gruppen</button>
         <button onclick=" location.href='/logout'" class="button">Ausloggen</button>

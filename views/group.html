@@ -1,29 +1,16 @@
 {% extends "layout.html" %}
 {% block content %}
     <h1>Gruppe: {{ group.name }}</h1><br>
-    <ul>
-        <li>
-            <strong>id: </strong>{{ group.id }}
-        </li>
-        <li>
-            <strong>name: </strong>{{ group.name }}
-        </li>
-        <li>
-            <strong>GroupId: </strong>{{ group.groupId }}
-        </li>
-        <li>
-            <strong>AssignableUsers:</strong>
-            <ul>
-        {% for user in  group.assignableUsers %}
-                    <li>
-                        <div>
-                            <strong>{{ user.assigned ? 'ja' : 'nein' }}</strong> {{ user.id }}: {{ user.firstname }} {{ user.lastname}}
-                        </div>
-                    </li>
+        <strong>AssignableUsers:</strong>
+        <ul>
+        {% for user in  group.assignableUsers | sort(user.lastname)%}
+            <div class="flex">
+                <div class= "{% if user.assigned =='nein'%}false{%endif%}">
+                    <strong>{{ user.firstname }} {{ user.lastname}}</strong>
+                </div>       
+            </div>        
         {% endfor %}
-           </ul>
-        </li>
-    </ul>
+        </ul>
     <button onclick=" location.href='/groups/{{ group.id }}/edit'" class="button">Ändern</button>
     <br>
     <br>

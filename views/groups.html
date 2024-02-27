@@ -3,14 +3,17 @@
     <h1>Gruppen</h1><br>
     <ul>
         {% for key, value in  groups %}
-                    <li>
-                        <strong>Gruppenname:</strong> {{ value.groupname }}
+            <div class="flex">
+                <div class="groups">
+                        <strong>{{ value.groupname }}</strong>
                         {% if value.id %}
                         <a href=" /groups/{{ value.id }}">zu Gruppe</a><br>
                         {%endif%}  
-                        <strong>Groupexternalnumber:</strong> {{ value.groupexternalnumber }}<br> 
-                        <strong>Groupinternalnumber:</strong> {{ value.groupinternalnumber }}
-                    </li><br>
+                        <strong>Externe Rufnummer:</strong> {{ value.groupexternalnumber }}<br> 
+                        <strong>Interne Rufnummer:</strong> {{ value.groupinternalnumber }}
+                    <br>
+                </div>
+            </div>
         {% endfor %}
     </ul>
     <button onclick=" location.href='/users/me'" class="button">Benutzer</button> 
