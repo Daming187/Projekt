@@ -120,7 +120,7 @@ $app->post('/login', function (Request $request, Response $response) use ($app, 
     Session::setAdminToken($adminToken);
 
     return $response
-            ->withHeader('Location', urlFor($app, 'usersMe'))
+            ->withHeader('Location', urlFor($app, 'groups'))
             ->withStatus(303);
 })->setName('login-post');
 

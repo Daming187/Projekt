@@ -2,34 +2,18 @@
 {% block content %}
     <h1>Gruppe: {{ group.name }}</h1><br>
     <form method="POST">
-    <ul>
-        <li>
-            <strong>id: </strong>{{ group.id }}
-        </li>
-        <li>
-            <strong>name: </strong>{{ group.name }}
-        </li>
-        <li>
-            <strong>GroupId: </strong>{{ group.groupId }}
-        </li>
-        <li>
-            <strong>AssignableUsers:</strong>
-        </li>   
-    <ul>
-        {% for user in  group.assignableUsers %}     
-                <li>
-                    <div>
-                        <select name="assigned[{{ user.id }}]" size="1">
-                            <option value="1"{{ user.assigned ? " selected" : '' }}>Ja</option>
-                            <option value="0"{{ not user.assigned ? " selected" : '' }}>Nein</option>
-                        </select>
-                        {{ user.id }}: {{ user.firstname }} {{ user.lastname}}
-                    </div>
-                </li>
-        {% endfor %}
-            </ul>
-        </li>
-    </ul>
+    <strong>AssignableUsers:</strong>  
+    <div class="flex">
+        {% for user in  group.assignableUsers | sort((a, b) => a.lastname <=> b.lastname) %}    
+            <div class= "{% if user.assigned =='nein'%}false{%endif%}">
+                <select name="assigned[{{ user.id }}]" size="1">
+                    <option value="1"{{ user.assigned ? " selected" : '' }}>Ja</option>
+                    <option value="0"{{ not user.assigned ? " selected" : '' }}>Nein</option>
+                </select>
+                {{ user.firstname }} {{ user.lastname}}
+            </div>
+    {% endfor %}
+    </div>
     <button type="submit">speichern</button>
     <button onclick=" location.href='/groups/{{ group.id }}'" class="button">Abbrechen</button>
     <br>
